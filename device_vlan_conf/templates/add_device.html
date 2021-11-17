@@ -1,0 +1,318 @@
+{%  load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Device</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="{% static 'js/bootstrap.js' %}"></script>
+    <script src="{% static 'js/bootstrap.bundle.js' %}"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+</head>
+<body>
+    <section class="vh-150 gradient-custom">
+      <div class="p-md-5 py-5 h-150">
+        <div class="row justify-content-center align-items-center h-150">
+          <div class="col-12 col-lg-12 col-xl-12">
+            <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+              <div class="card-body p-4 p-md-5">
+                <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Add a device</h3>
+                <form method="POST" novalidate>
+                    {% csrf_token %}
+
+                  <div class="row">
+                    <div class="col-md-4 mb-4">
+                      <div class="form-outline">
+                        {{ form.SN.as_hidden }}
+                        <input type="text" name="SN" class="form-control form-control-lg" placeholder="{{ form.SN.help_text }}"/>
+                        <label class="form-label"  data-toggle="tooltip" data-placement="top" title="Device serial number" for="SN">Serial Number</label>
+                      </div>
+
+                    </div>
+                    <div class="col-md-4 mb-4">
+
+                      <div class="form-outline">
+                        {{ form.NAME.as_hidden }}
+                        <input type="text" name="NAME" placeholder="{{ form.NAME.help_text }}" class="form-control form-control-lg" />
+                        <label class="form-label"  data-toggle="tooltip" data-placement="top" title="Device Name" for="NAME">Name</label>
+                      </div>
+
+                    </div>
+                    <div class="col-md-4 mb-4">
+
+                      <div class="form-outline">
+                        {{ form.DEVICE_ID.as_hidden }}
+                        <input type="number" name="DEVICE_ID" placeholder="{{ form.DEVICE_ID.help_text }}" class="form-control form-control-lg" />
+                        <label class="form-label"  data-toggle="tooltip" data-placement="top" title="Device Name" for="DEVICE_ID">DEVICE_ID</label>
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-4 mb-4">
+
+                      <div class="form-outline">
+                        {{ form.DEVICE_NOTES.as_hidden }}
+                        <input type="text" name="DEVICE_NOTES" placeholder="{{ form.DEVICE_NOTES.help_text }}" class="form-control form-control-lg" />
+                        <label class="form-label"  data-toggle="tooltip" data-placement="top" title="Device Notes" for="DEVICE_NOTES">DEVICE_NOTES</label>
+                      </div>
+
+                    </div>
+                    <div class="col-md-4 mb-4">
+
+                      <div class="form-outline">
+                        {{ form.LAN_NETWORK_LIST.as_hidden }}
+                        <input type="text" name="LAN_NETWORK_LIST" placeholder="{{ form.LAN_NETWORK_LIST.help_text }}" class="form-control form-control-lg" />
+                        <label class="form-label"  data-toggle="tooltip" data-placement="top" title="Network in CIDR" for="LAN_NETWORK_LIST">LAN_NETWORK_LIST</label>
+                      </div>
+
+                    </div>
+                    <div class="col-md-4 mb-4">
+                      <div class="form-outline">
+                        {{ form.VLANS.as_hidden }}
+                          <select class="js-example-basic-multiple form-control form-control-lg" style="width: 100%" name="VLANS" placeholder="{{ form.VLANS.help_text }}" multiple="multiple">
+                              {% for key, value in vlans.items %}
+                            <option value="{{ value.id }}">{{ value.name }}</option>
+                          {% endfor %}
+                        </select>
+                        <label class="form-label"  data-toggle="tooltip" data-placement="top" title="Select from created VLANs" for="VLANS">VLANS</label>
+                      </div>
+                    </div>
+
+
+
+
+                  </div>
+
+                  <div class="row">
+
+                    <div class="col-md-4 mb-4">
+                      <div class="form-outline">
+                        {{ form.LAN_MEDIA.as_hidden }}
+                          <select class="select form-control form-control-lg" name="LAN_MEDIA">
+                              <option value=""></option>
+                              <option value="auto">auto</option>
+                              <option value="1000baseTx-FD">1000baseTx-FD</option>
+                              <option value="100baseTx-FD">100baseTx-FD</option>
+                              <option value="100baseTx-HD">100baseTx-HD</option>
+                              <option value="10baseT-FD">10baseT-FD</option>
+                              <option value="10baseT-HD">10baseT-HD</option>
+                          </select>
+                        <label class="form-label"  data-toggle="tooltip" data-placement="top" title="Physical media setting" for="LAN_MEDIA">LAN_MEDIA</label>
+                      </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                      <div class="form-outline">
+                        {{ form.LAN_L2_ISO.as_hidden }}
+                          <select class="select form-control form-control-lg"  placeholder="{{ form.LAN_L2_ISO.help_text }}" name="LAN_L2_ISO">
+                              <option value=""></option>
+                              <option value="Yes">Yes</option>
+                              <option value="No">No</option>
+                          </select>
+                        <label class="form-label"  data-toggle="tooltip" data-placement="top" title="Layer 2 isolation enabled (Inter-VLAN routing is disabled)" for="LAN_L2_ISO">LAN_L2_ISO</label>
+                      </div>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                      <div class="form-outline">
+                        {{ form.LAN_STROUTEn.as_hidden }}
+                        <input type="text" name="LAN_STROUTEn" placeholder="{{ form.LAN_STROUTEn.help_text }}" class="form-control form-control-lg" />
+                        <label class="form-label"  data-toggle="tooltip" data-placement="top" title="Static routing entry. Format is (original destination CIDR):(routing IP address)" for="LAN_STROUTEn">LAN_STROUTEn</label>
+                      </div>
+                    </div>
+
+
+
+
+                  </div>
+
+                  <div class="row">
+
+                    <div class="col-md-4 mb-4">
+                      <div class="form-outline">
+                        {{ form.DHCP_SERVER.as_hidden }}
+                          <select class="select form-control form-control-lg" name="DHCP_SERVER">
+                              <option value=""></option>
+                              <option value="Enable">Enable</option>
+                              <option value="Disable">Disable</option>
+                              <option value="Relay">Relay</option>
+                          </select>
+                        <label class="form-label"  data-toggle="tooltip" data-placement="top" title="DHCP server setting" for="DHCP_SERVER">DHCP_SERVER</label>
+                      </div>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                      <div class="form-outline">
+                        {{ form.DHCP_SERVER_LEASE.as_hidden }}
+                        <input type="number" name="DHCP_SERVER_LEASE" placeholder="{{ form.DHCP_SERVER_LEASE.help_text }}" class="form-control form-control-lg" />
+                        <label class="form-label"  data-toggle="tooltip" data-placement="top" title="DHCP lease time in seconds" for="DHCP_SERVER_LEASE">DHCP_SERVER_LEASE</label>
+                      </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                      <div class="form-outline">
+                        {{ form.DHCP_SERVER_NETMASK.as_hidden }}
+                        <input type="text" name="DHCP_SERVER_NETMASK" placeholder="{{ form.DHCP_SERVER_NETMASK.help_text }}" class="form-control form-control-lg" />
+                        <label class="form-label"  data-toggle="tooltip" data-placement="top" title="DHCP server netmask" for="DHCP_SERVER_NETMASK">DHCP_SERVER_NETMASK</label>
+                      </div>
+                    </div>
+
+
+
+                  </div>
+
+                  <div class="row">
+
+                    <div class="col-md-4 mb-4">
+                      <div class="form-outline">
+                        {{ form.DHCP_SERVER_POOL_START.as_hidden }}
+                        <input type="text" name="DHCP_SERVER_POOL_START" placeholder="{{ form.DHCP_SERVER_POOL_START.help_text }}" class="form-control form-control-lg" />
+                        <label class="form-label"  data-toggle="tooltip" data-placement="top" title="First address in the DHCP address pool (inclusive)" for="DHCP_SERVER_POOL_START">DHCP_SERVER_POOL_START</label>
+                      </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                      <div class="form-outline">
+                        {{ form.DHCP_SERVER_POOL_END.as_hidden }}
+                        <input type="text" name="DHCP_SERVER_POOL_END" placeholder="{{ form.DHCP_SERVER_POOL_END.help_text }}" class="form-control form-control-lg" />
+                        <label class="form-label"  data-toggle="tooltip" data-placement="top" title="Last address in the DHCP address pool (inclusive)" for="DHCP_SERVER_POOL_END">DHCP_SERVER_POOL_END</label>
+                      </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                      <div class="form-outline">
+                        {{ form.DHCP_RESERVATION.as_hidden }}
+                        <input type="text" name="DHCP_RESERVATION" placeholder="{{ form.DHCP_RESERVATION.help_text }}" class="form-control form-control-lg" />
+                        <label class="form-label"  data-toggle="tooltip" data-placement="top" title="DHCP reserved addresses" for="DHCP_RESERVATION">DHCP_RESERVATION</label>
+                      </div>
+                    </div>
+
+
+
+                  </div>
+
+                  <div class="row">
+
+
+                    <div class="col-md-4 mb-4">
+                      <div class="form-outline">
+                        {{ form.DHCP_LOG_ENABLE.as_hidden }}
+                          <select class="select form-control form-control-lg" name="DHCP_LOG_ENABLE">
+                              <option value=""></option>
+                              <option value="Yes">Yes</option>
+                              <option value="No">No</option>
+                          </select>
+                        <label class="form-label"  data-toggle="tooltip" data-placement="top" title="DHCP logging enabled" for="DHCP_LOG_ENABLE">DHCP_LOG_ENABLE</label>
+                      </div>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                      <div class="form-outline">
+                        {{ form.DHCP_SERVER_DNS.as_hidden }}
+                        <input type="text" name="DHCP_SERVER_DNS" placeholder="{{ form.DHCP_SERVER_DNS.help_text }}" class="form-control form-control-lg" />
+                        <label class="form-label"  data-toggle="tooltip" data-placement="top" title="DNS primary and (optional) secondary addresses" for="DHCP_SERVER_DNS">DHCP_SERVER_DNS</label>
+                      </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                      <div class="form-outline">
+                        {{ form.DHCP_SERVER_WINS.as_hidden }}
+                        <input type="text" name="DHCP_SERVER_WINS" placeholder="{{ form.DHCP_SERVER_WINS.help_text }}" class="form-control form-control-lg" />
+                        <label class="form-label"  data-toggle="tooltip" data-placement="top" title="WINS primary and (optional) secondary addresses" for="DHCP_SERVER_WINS">DHCP_SERVER_WINS</label>
+                      </div>
+                    </div>
+
+
+
+                  </div>
+
+                  <div class="row">
+
+
+                    <div class="col-md-4 mb-4">
+                      <div class="form-outline">
+                        {{ form.DHCP_OPTION_15.as_hidden }}
+                        <input type="text" name="DHCP_OPTION_15" placeholder="{{ form.DHCP_OPTION_15.help_text }}" class="form-control form-control-lg" />
+                        <label class="form-label"  data-toggle="tooltip" data-placement="top" title="DHCP Option 15 domain name" for="DHCP_OPTION_15">DHCP_OPTION_15</label>
+                      </div>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                      <div class="form-outline">
+                        {{ form.DHCP_RELAY_OPTION_82.as_hidden }}
+                          <select class="select form-control form-control-lg" name="DHCP_RELAY_OPTION_82">
+                              <option value=""></option>
+                              <option value="Yes">Yes</option>
+                              <option value="No">No</option>
+                          </select>
+                        <label class="form-label"  data-toggle="tooltip" data-placement="top" title="DHCP Option 82 (52 hex) enabled" for="DHCP_RELAY_OPTION_82">DHCP_RELAY_OPTION_82</label>
+                      </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                      <div class="form-outline">
+                        {{ form.DHCP_RELAY_SERVER.as_hidden }}
+                        <input type="text" name="DHCP_RELAY_SERVER" placeholder="{{ form.DHCP_RELAY_SERVER.help_text }}" class="form-control form-control-lg" />
+                        <label class="form-label"  data-toggle="tooltip" data-placement="top" title="DHCP primary and (optional) secondary relay addresses" for="DHCP_RELAY_SERVER">DHCP_RELAY_SERVER</label>
+                      </div>
+                    </div>
+
+                  </div>
+
+
+                  <div class="float-left">
+                      <a class="btn btn-primary btn-lg" href="/home">Cancel</a>
+                  </div>
+                  <div class="float-right">
+                    <input class="btn btn-primary btn-lg" type="submit" value="Add" />
+                  </div>
+
+                </form>
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
+
+    <script>
+        $(document).ready(function() {
+            $('.js-example-basic-multiple').select2();
+
+        });
+        $(document).ready(function() {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+
+    </script>
+    <style>
+        .gradient-custom {
+          /* fallback for old browsers */
+          background: #56baed;
+
+          /* Chrome 10-25, Safari 5.1-6 */
+          background: -webkit-linear-gradient(to bottom right, #56baed, #56baed);
+
+          /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+          background: linear-gradient(to bottom right,#56baed, #56baed)
+        }
+
+        .card-registration .select-input.form-control[readonly]:not([disabled]) {
+          font-size: 1rem;
+          line-height: 2.15;
+          padding-left: .75em;
+          padding-right: .75em;
+        }
+        .card-registration .select-arrow {
+          top: 13px;
+        }
+    </style>
+</body>
+</html>

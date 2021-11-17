@@ -1,0 +1,114 @@
+{%  load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+
+</head>
+<body>
+<div class="card">
+  <h3 class="card-header text-center font-weight-bold text-uppercase py-4">
+    VLANs
+  </h3>
+  <div class="card-body">
+    <div id="table" class="table-editable">
+      <span class="table-add float-left mb-3 mr-2">
+          <a href="/home" class="btn btn-success">Home</a>
+      </span>
+
+      <span class="table-add float-right mb-3 mr-2">
+          <a href="/add_vlan" class="btn btn-success">Add VLAN</a>
+      </span>
+        <p>A list of all the device serial numbers these settings will apply to. Data entered in any fields marked with a * will only be stored in
+the backup JSON file and not included in the CV file</p>
+      <br>
+      <br>
+      <br>
+      <table id="sortTable" class="table table-bordered table-responsive table-striped text-center">
+        <thead>
+          <tr>
+            <th class="text-center">LANn_VLAN_ID</th>
+            <th class="text-center">LANn_NAME</th>
+            <th class="text-center">LANn_NETWORK_LIST</th>
+            <th class="text-center">LANn_NOTES</th>
+            <th class="text-center">LANn_L2_ISO</th>
+            <th class="text-center">DHCPn_SERVER</th>
+            <th class="text-center">DHCPn_SERVER_LEASE</th>
+            <th class="text-center">DHCPn_SERVER_NETMASK</th>
+            <th class="text-center">DHCPn_SERVER_POOL_START</th>
+            <th class="text-center">DHCPn_SERVER_POOL_END</th>
+            <th class="text-center">DHCPn_RESERVATION</th>
+            <th class="text-center">DHCPn_LOG_ENABLE</th>
+            <th class="text-center">DHCPn_SERVER_DNS</th>
+            <th class="text-center">DHCPn_SERVER_WINS</th>
+            <th class="text-center">DHCPn_OPTION_15</th>
+            <th class="text-center">DHCPn_RELAY_OPTION_82</th>
+            <th class="text-center">DHCPn_RELAY_SERVER</th>
+          </tr>
+        </thead>
+        <tbody id="myTable">
+            {% for vlan in vlans %}
+                <tr>
+                    <td class="pt-3-half">{{ vlan.LANn_VLAN_ID }}</td>
+                    <td class="pt-3-half">{{ vlan.LANn_NAME }}</td>
+                    <td class="pt-3-half">{{ vlan.LANn_NETWORK_LIST }}</td>
+                    <td class="pt-3-half">{{ vlan.LANn_NOTES }}</td>
+                    <td class="pt-3-half">{{ vlan.LANn_L2_ISO }}</td>
+                    <td class="pt-3-half">{{ vlan.DHCPn_SERVER }}</td>
+                    <td class="pt-3-half">{{ vlan.DHCPn_SERVER_LEASE }}</td>
+                    <td class="pt-3-half">{{ vlan.DHCPn_SERVER_NETMASK }}</td>
+                    <td class="pt-3-half">{{ vlan.DHCPn_SERVER_POOL_START }}</td>
+                    <td class="pt-3-half">{{ vlan.DHCPn_SERVER_POOL_END }}</td>
+                    <td class="pt-3-half">{{ vlan.DHCPn_RESERVATION }}</td>
+                    <td class="pt-3-half">{{ vlan.DHCPn_LOG_ENABLE }}</td>
+                    <td class="pt-3-half">{{ vlan.DHCPn_SERVER_DNS }}</td>
+                    <td class="pt-3-half">{{ vlan.DHCPn_SERVER_WINS }}</td>
+                    <td class="pt-3-half">{{ vlan.DHCPn_OPTION_15 }}</td>
+                    <td class="pt-3-half">{{ vlan.DHCPn_RELAY_OPTION_82 }}</td>
+                    <td class="pt-3-half">{{ vlan.DHCPn_RELAY_SERVER }}</td>
+                  </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="{% static 'js/jquery-1.12.4.min.js' %}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js">
+    </script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js">
+    </script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
+    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js">
+    </script>
+    <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js">
+    </script>
+    <script>
+
+        $(document).ready(function(){
+          $("#myInput").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#myTable tr").filter(function() {
+              $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+          });
+        });
+
+        $('#sortTable').DataTable();
+        $(document).ready(function(){
+          $("#myInput").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#myTable tr").filter(function() {
+              $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+          });
+        });
+    </script>
+</body>
+</html>

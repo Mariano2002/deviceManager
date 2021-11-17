@@ -1,0 +1,306 @@
+{%  load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit / View VLAN</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="{% static 'js/bootstrap.js' %}"></script>
+    <script src="{% static 'js/bootstrap.bundle.js' %}"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+</head>
+<body>
+
+    <section class="vh-150 gradient-custom">
+      <div class="p-md-5 py-5 h-150">
+        <div class="row justify-content-center align-items-center h-150">
+          <div class="col-12 col-lg-12 col-xl-12">
+            <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+              <div class="card-body p-4 p-md-5">
+                <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Edit / View VLAN</h3>
+                <form method="POST" novalidate>
+                    {% csrf_token %}
+
+                  <div class="row">
+
+                    <div class="col-md-4 mb-4">
+                      <div class="form-outline">
+                        {{ form.LANn_VLAN_ID.as_hidden }}
+                        <input type="number" name="LANn_VLAN_ID" value="{{ vlan.LANn_VLAN_ID }}" class="form-control form-control-lg" placeholder="{{ form.LANn_VLAN_ID.help_text }}" />
+                        <label data-toggle="tooltip" data-placement="top" title="ID of the VLAN" class="form-label" for="LANn_VLAN_ID">LANn_VLAN_ID</label>
+                      </div>
+                    </div>
+
+
+                    <div class="col-md-4 mb-4">
+                      <div class="form-outline">
+                        {{ form.LANn_NAME.as_hidden }}
+                        <input type="text" name="LANn_NAME" value="{{ vlan.LANn_NAME }}" class="form-control form-control-lg" placeholder="{{ form.LANn_NAME.help_text }}" />
+                        <label data-toggle="tooltip" data-placement="top" title="Name of the VLAN" class="form-label" for="LANn_NAME">LANn_NAME</label>
+                      </div>
+                    </div>
+
+
+                    <div class="col-md-4 mb-4">
+                      <div class="form-outline">
+                        {{ form.LANn_NETWORK_LIST.as_hidden }}
+                        <input type="text" name="LANn_NETWORK_LIST" value="{{ vlan.LANn_NETWORK_LIST }}" class="form-control form-control-lg" placeholder="{{ form.LANn_NETWORK_LIST.help_text }}" />
+                        <label data-toggle="tooltip" data-placement="top" title="Network in CIDR" class="form-label" for="LANn_NETWORK_LIST">LANn_NETWORK_LIST</label>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <div class="row">
+
+                    <div class="col-md-4 mb-4">
+                      <div class="form-outline">
+                        {{ form.LANn_NOTES.as_hidden }}
+                        <input type="text" name="LANn_NOTES" value="{{ vlan.LANn_NOTES }}" class="form-control form-control-lg" placeholder="{{ form.LANn_NOTES.help_text }}" />
+                        <label data-toggle="tooltip" data-placement="top" title="VLAN Notes" class="form-label" for="LANn_NOTES">LANn_NOTES</label>
+                      </div>
+                    </div>
+
+
+                    <div class="col-md-4 mb-4">
+                      <div class="form-outline">
+                        {{ form.LANn_L2_ISO.as_hidden }}
+                          <select class="select form-control form-control-lg" name="LANn_L2_ISO">
+                              <option value=""></option>
+                              {% if vlan.LANn_L2_ISO == 'Yes' %}
+                                <option value="Yes" selected>Yes</option>
+                              {% else %}
+                                <option value="Yes">Yes</option>
+                              {% endif %}
+                              {% if vlan.LANn_L2_ISO == 'No' %}
+                                <option value="No" selected>No</option>
+                              {% else %}
+                                <option value="No">No</option>
+                              {% endif %}
+                          </select>
+                        <label data-toggle="tooltip" data-placement="top" title="Layer 2 isolation enabled (Inter-VLAN routing is disabled)" class="form-label" for="LANn_L2_ISO">LANn_L2_ISO</label>
+                      </div>
+                    </div>
+
+
+                    <div class="col-md-4 mb-4">
+                      <div class="form-outline">
+                        {{ form.DHCPn_SERVER.as_hidden }}
+                          <select class="select form-control form-control-lg" name="DHCPn_SERVER">
+                              <option value=""></option>
+                              {% if vlan.DHCPn_SERVER == 'Enable' %}
+                                <option value="Enable" selected>Enable</option>
+                              {% else %}
+                                <option value="Enable">Enable</option>
+                              {% endif %}
+                              {% if vlan.DHCPn_SERVER == 'Disable' %}
+                                <option value="Disable" selected>Disable</option>
+                              {% else %}
+                                <option value="Disable">Disable</option>
+                              {% endif %}
+                              {% if vlan.DHCPn_SERVER == 'Relay' %}
+                                <option value="Relay" selected>Relay</option>
+                              {% else %}
+                                <option value="Relay">Relay</option>
+                              {% endif %}
+                          </select>
+                        <label data-toggle="tooltip" data-placement="top" title="DHCP server setting" class="form-label" for="DHCPn_SERVER">DHCPn_SERVER</label>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <div class="row">
+
+                    <div class="col-md-4 mb-4">
+                      <div class="form-outline">
+                        {{ form.DHCPn_SERVER_LEASE.as_hidden }}
+                        <input type="number" name="DHCPn_SERVER_LEASE" value="{{ vlan.DHCPn_SERVER_LEASE }}" class="form-control form-control-lg" placeholder="{{ form.DHCPn_SERVER_LEASE.help_text }}" />
+                        <label data-toggle="tooltip" data-placement="top" title="DHCP lease time in seconds" class="form-label" for="DHCPn_SERVER_LEASE">DHCPn_SERVER_LEASE</label>
+                      </div>
+                    </div>
+
+
+                    <div class="col-md-4 mb-4">
+                      <div class="form-outline">
+                        {{ form.DHCPn_SERVER_NETMASK.as_hidden }}
+                        <input type="text" name="DHCPn_SERVER_NETMASK" value="{{ vlan.DHCPn_SERVER_NETMASK }}" class="form-control form-control-lg" placeholder="{{ form.DHCPn_SERVER_NETMASK.help_text }}" />
+                        <label data-toggle="tooltip" data-placement="top" title="DHCP server netmask" class="form-label" for="DHCPn_SERVER_NETMASK">DHCPn_SERVER_NETMASK</label>
+                      </div>
+                    </div>
+
+
+                    <div class="col-md-4 mb-4">
+                      <div class="form-outline">
+                        {{ form.DHCPn_SERVER_POOL_START.as_hidden }}
+                        <input type="text" name="DHCPn_SERVER_POOL_START" value="{{ vlan.DHCPn_SERVER_POOL_START }}" class="form-control form-control-lg" placeholder="{{ form.DHCPn_SERVER_POOL_START.help_text }}" />
+                        <label data-toggle="tooltip" data-placement="top" title="First address in the DHCP address pool (inclusive)" class="form-label" for="DHCPn_SERVER_POOL_START">DHCPn_SERVER_POOL_START</label>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <div class="row">
+
+                    <div class="col-md-4 mb-4">
+                      <div class="form-outline">
+                        {{ form.DHCPn_SERVER_POOL_END.as_hidden }}
+                        <input type="text" name="DHCPn_SERVER_POOL_END" value="{{ vlan.DHCPn_SERVER_POOL_END }}" class="form-control form-control-lg" placeholder="{{ form.DHCPn_SERVER_POOL_END.help_text }}" />
+                        <label data-toggle="tooltip" data-placement="top" title="Last address in the DHCP address pool (inclusive)" class="form-label" for="DHCPn_SERVER_POOL_END">DHCPn_SERVER_POOL_END</label>
+                      </div>
+                    </div>
+
+
+                    <div class="col-md-4 mb-4">
+                      <div class="form-outline">
+                        {{ form.DHCPn_RESERVATION.as_hidden }}
+                        <input type="text" name="DHCPn_RESERVATION" value="{{ vlan.DHCPn_RESERVATION }}" class="form-control form-control-lg" placeholder="{{ form.DHCPn_RESERVATION.help_text }}" />
+                        <label data-toggle="tooltip" data-placement="top" title="DHCP reserved addresses" class="form-label" for="DHCPn_RESERVATION">DHCPn_RESERVATION</label>
+                      </div>
+                    </div>
+
+
+                    <div class="col-md-4 mb-4">
+                      <div class="form-outline">
+                        {{ form.DHCPn_LOG_ENABLE.as_hidden }}
+                          <select class="select form-control form-control-lg" name="DHCPn_LOG_ENABLE">
+                              <option value=""></option>
+                              {% if vlan.DHCPn_LOG_ENABLE == 'Yes' %}
+                                <option value="Yes" selected>Yes</option>
+                              {% else %}
+                                <option value="Yes">Yes</option>
+                              {% endif %}
+                              {% if vlan.DHCPn_LOG_ENABLE == 'No' %}
+                                <option value="No" selected>No</option>
+                              {% else %}
+                                <option value="No">No</option>
+                              {% endif %}
+                          </select>
+                        <label data-toggle="tooltip" data-placement="top" title="DHCP logging enabled" class="form-label" for="DHCPn_LOG_ENABLE">DHCPn_LOG_ENABLE</label>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <div class="row">
+
+                    <div class="col-md-4 mb-4">
+                      <div class="form-outline">
+                        {{ form.DHCPn_SERVER_DNS.as_hidden }}
+                        <input type="text" name="DHCPn_SERVER_DNS" value="{{ vlan.DHCPn_SERVER_DNS }}" class="form-control form-control-lg" placeholder="{{ form.DHCPn_SERVER_DNS.help_text }}" />
+                        <label data-toggle="tooltip" data-placement="top" title="DNS primary and (optional) secondary addresses" class="form-label" for="DHCPn_SERVER_DNS">DHCPn_SERVER_DNS</label>
+                      </div>
+                    </div>
+
+
+                    <div class="col-md-4 mb-4">
+                      <div class="form-outline">
+                        {{ form.DHCPn_SERVER_WINS.as_hidden }}
+                        <input type="text" name="DHCPn_SERVER_WINS" value="{{ vlan.DHCPn_SERVER_WINS }}" class="form-control form-control-lg" placeholder="{{ form.DHCPn_SERVER_WINS.help_text }}" />
+                        <label data-toggle="tooltip" data-placement="top" title="WINS primary and (optional) secondary addresses" class="form-label" for="DHCPn_SERVER_WINS">DHCPn_SERVER_WINS</label>
+                      </div>
+                    </div>
+
+
+                    <div class="col-md-4 mb-4">
+                      <div class="form-outline">
+                        {{ form.DHCPn_OPTION_15.as_hidden }}
+                        <input type="text" name="DHCPn_OPTION_15" value="{{ vlan.DHCPn_OPTION_15 }}" class="form-control form-control-lg" placeholder="{{ form.DHCPn_OPTION_15.help_text }}" />
+                        <label data-toggle="tooltip" data-placement="top" title="DHCP Option 15 domain name" class="form-label" for="DHCPn_OPTION_15">DHCPn_OPTION_15</label>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <div class="row">
+
+                    <div class="col-md-4 mb-4">
+                      <div class="form-outline">
+                        {{ form.DHCPn_RELAY_OPTION_82.as_hidden }}
+                          <select class="select form-control form-control-lg" name="DHCPn_RELAY_OPTION_82">
+                              <option value=""></option>
+                              {% if vlan.DHCPn_RELAY_OPTION_82 == 'Yes' %}
+                                <option value="Yes" selected>Yes</option>
+                              {% else %}
+                                <option value="Yes">Yes</option>
+                              {% endif %}
+                              {% if vlan.DHCPn_RELAY_OPTION_82 == 'No' %}
+                                <option value="No" selected>No</option>
+                              {% else %}
+                                <option value="No">No</option>
+                              {% endif %}
+                          </select>
+                        <label data-toggle="tooltip" data-placement="top" title="DHCP Option 82 (52 hex) enabled" class="form-label" for="DHCPn_RELAY_OPTION_82">DHCPn_RELAY_OPTION_82</label>
+                      </div>
+                    </div>
+
+
+                    <div class="col-md-4 mb-4">
+                      <div class="form-outline">
+                        {{ form.DHCPn_RELAY_SERVER.as_hidden }}
+                        <input type="text" name="DHCPn_RELAY_SERVER" value="{{ vlan.DHCPn_RELAY_SERVER }}" class="form-control form-control-lg" placeholder="{{ form.DHCPn_RELAY_SERVER.help_text }}" />
+                        <label data-toggle="tooltip" data-placement="top" title="DHCP primary and (optional) secondary relay addresses" class="form-label" for="DHCPn_RELAY_SERVER">DHCPn_RELAY_SERVER</label>
+                      </div>
+                    </div>
+
+                  </div>
+
+
+
+
+                  <div class="float-left">
+                      <a class="btn btn-primary btn-lg" href="/home">Cancel</a>
+                  </div>
+                  <div class="float-right">
+                    <input class="btn btn-primary btn-lg" type="submit" value="Save" />
+                  </div>
+
+                </form>
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script>
+        $(document).ready(function() {
+            $('.js-example-basic-multiple').select2();
+        });
+
+        $(document).ready(function() {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+
+
+    </script>
+    <style>
+        .gradient-custom {
+          /* fallback for old browsers */
+          background: #56baed;
+
+          /* Chrome 10-25, Safari 5.1-6 */
+          background: -webkit-linear-gradient(to bottom right, #56baed, #56baed);
+
+          /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+          background: linear-gradient(to bottom right,#56baed, #56baed)
+        }
+
+        .card-registration .select-input.form-control[readonly]:not([disabled]) {
+          font-size: 1rem;
+          line-height: 2.15;
+          padding-left: .75em;
+          padding-right: .75em;
+        }
+        .card-registration .select-arrow {
+          top: 13px;
+        }
+    </style>
+</body>
+</html>
