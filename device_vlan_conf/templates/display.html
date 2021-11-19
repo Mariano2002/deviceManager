@@ -32,7 +32,7 @@
           <table id="sortTable" class="table table-bordered table-responsive table-striped text-center">
             <thead>
               <tr>
-                <th class="text-center" style="white-space: nowrap;width: 1%;">Select</th>
+                <th class="text-center" style="white-space: nowrap;width: 1%;"><a onclick="select_all()">Select All</a></th>
                 <th class="text-center" style="white-space: nowrap;width: 1%;">Serial Number</th>
                 <th class="text-center" style="white-space: nowrap;width: 1%;">NAME*</th>
                 <th class="text-center" style="white-space: nowrap;width: 1%;">ID*</th>
@@ -89,7 +89,7 @@
           <table id="sortTable2" class="table table-bordered table-responsive table-striped text-center">
             <thead>
               <tr>
-                <th class="text-center" style="white-space: nowrap;width: 1%;">Select</th>
+                <!--<th class="text-center" style="white-space: nowrap;width: 1%;">Select</th>-->
                 <th class="text-center" style="white-space: nowrap;width: 1%;">VLAN ID</th>
                 <th class="text-center" style="white-space: nowrap;width: 1%;">Name</th>
                 <th class="text-center" style="white-space: nowrap;width: 1%;">Subnet</th>
@@ -100,10 +100,10 @@
             <tbody id="myTable">
                 {% for vlan in vlans %}
                     <tr>
-                      <td class="pt-3-half" style="white-space: nowrap;width: .1%;"><div class="custom-control custom-checkbox text-center">
+                      <!--<td class="pt-3-half" style="white-space: nowrap;width: .1%;"><div class="custom-control custom-checkbox text-center">
                           <input type="checkbox" class="custom-control-input" id="customCheck_vlan{{ vlan.id }}">
                           <label class="custom-control-label" for="customCheck_vlan{{ vlan.id }}"></label>
-                      </div></td>
+                      </div></td>-->
                         <td class="pt-3-half" style="white-space: nowrap;width: 1%;">{{ vlan.LANn_VLAN_ID }}</td>
                         <td class="pt-3-half" style="white-space: nowrap;width: 1%;">{{ vlan.LANn_NAME }}</td>
                         <td class="pt-3-half" style="white-space: nowrap;width: 1%;">{{ vlan.LANn_NETWORK_LIST }}</td>
@@ -119,7 +119,10 @@
             </table>
           <br>
           <br>
-
+                <div id="errors"></div>
+                {% for message  in messages  %}
+                        <p class="alert alert-danger">{{ message  }}</p>
+                {% endfor %}
             </div>
           </div>
         </div>
@@ -127,14 +130,10 @@
     <div class="card">
       <div class="card-body">
               <span class="table-add float-left mb-3 mr-2">
-
-                {% for message  in messages  %}
-                        <p>{{ message  }}</p>
-                {% endfor %}
                   <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                         <input type="file" id="file" name="file">
-                        <input type="submit" class="btn btn-success" value="Import from JSON">
+                        <input type="submit" class="btn btn-success" value="Import">
                   </form>
               </span>
               <span class="table-add float-right mb-3 mr-2">
@@ -158,7 +157,21 @@
     <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js">
     </script>
     <script>
+        function select_all() {
+            var trs = document.getElementById("sortTable").getElementsByTagName("tr")
 
+            for (let item of trs) {
+
+                try {
+                    item.getElementsByTagName("td")[0].getElementsByTagName("input")[0].checked = true
+
+                }
+                catch {
+
+                }
+            }
+
+        }
 
          function export_csv() {
             var ids = []
@@ -196,6 +209,10 @@
                 form.submit();
 
 
+            }
+            else {
+                var p = $('<p class="alert alert-danger">Please select the devices you want to export!</p>');
+                $('#errors').append(p);
             }
 
         }

@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Login Page</title>
+
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
 </head>
 <body>
@@ -20,7 +21,7 @@
 
 
             {% for message  in messages  %}
-                    <p>{{ message  }}</p>
+                    <p class="alert alert-danger">{{ message  }}</p>
             {% endfor %}
           <input type="text" id="name" class="fadeIn second" name="username" placeholder="Username">
           <input type="password" id="password" class="fadeIn third" name="password" placeholder="Password">

@@ -251,6 +251,9 @@
 
 
 
+                {% for message  in messages  %}
+                        <p class="alert alert-danger">{{ message  }}</p>
+                {% endfor %}
 
                   <div class="float-left">
                       <a class="btn btn-primary btn-lg" href="/home">Cancel</a>

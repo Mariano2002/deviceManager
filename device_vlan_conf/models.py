@@ -20,9 +20,9 @@ class device(models.Model):
         ('No', 'No'),
     )
     username = models.CharField(max_length=300, blank=False,)
-    SN = models.CharField(max_length=14, blank=False,  help_text='1234-5678-90AB')
-    NAME = models.CharField(max_length=100, blank=False,  help_text="Device 1")
-    DEVICE_ID = models.IntegerField(blank=False,  help_text="150")
+    SN = models.CharField(max_length=14, blank=True,  help_text='1234-5678-90AB')
+    NAME = models.CharField(max_length=100, blank=True,  help_text="Device 1")
+    DEVICE_ID = models.IntegerField(blank=False,  help_text="150", unique=True)
     DEVICE_NOTES = models.CharField(max_length=999, blank=True, help_text="This is a device")
     VLANS = models.CharField(max_length=9999, blank=True)
     LAN_NETWORK_LIST = models.CharField(max_length=25, blank=True,  help_text='192.168.0.1/24')
@@ -71,8 +71,8 @@ class VLAN(models.Model):
     )
 
     username = models.CharField(max_length=300, blank=False,)
-    LANn_VLAN_ID = models.IntegerField(blank=False, help_text='1-4094')
-    LANn_NAME = models.CharField(max_length=100, blank=False, help_text='"VLAN 1", "Marketing Network", etc')
+    LANn_VLAN_ID = models.IntegerField(blank=False, help_text='1-4094', unique=True)
+    LANn_NAME = models.CharField(max_length=100, blank=False, null=False, help_text='"VLAN 1", "Marketing Network", etc')
     LANn_NETWORK_LIST = models.CharField(max_length=25, blank=True, help_text='192.168.0.1/24')
     LANn_NOTES = models.CharField(max_length=999, blank=True, help_text="Notes for the VLAN")
     LANn_L2_ISO = models.CharField(max_length=3, choices=LANn_L2_ISO_choices, blank=True, help_text='yes, no')

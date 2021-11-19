@@ -79,7 +79,7 @@
                         {{ form.VLANS.as_hidden }}
                           <select class="js-example-basic-multiple form-control form-control-lg" style="width: 100%" name="VLANS" placeholder="{{ form.VLANS.help_text }}" multiple="multiple">
                               {% for key, value in vlans.items %}
-                            <option value="{{ value.id }}">{{ value.name }}</option>
+                            <option value="{{ value.id }}">{{ value.id }} | {{ value.name }}</option>
                           {% endfor %}
                         </select>
                         <label class="form-label"  data-toggle="tooltip" data-placement="top" title="Select from created VLANs" for="VLANS">VLANS</label>
@@ -261,6 +261,9 @@
 
                   </div>
 
+                {% for message  in messages  %}
+                        <p class="alert alert-danger">{{ message  }}</p>
+                {% endfor %}
 
                   <div class="float-left">
                       <a class="btn btn-primary btn-lg" href="/home">Cancel</a>

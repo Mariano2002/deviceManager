@@ -81,9 +81,9 @@
                           <select class="js-example-basic-multiple form-control form-control-lg" name="VLANS" multiple="multiple">
                           {% for key, value in vlans.items %}
                               {% if value.checked  %}
-                                <option value="{{ value.id }}" selected>{{ value.name }}</option>
+                                <option value="{{ value.id }}" selected>{{ value.id }} | {{ value.name }}</option>
                               {% else %}
-                                <option value="{{ value.id }}" >{{ value.name }}</option>
+                                <option value="{{ value.id }}" >{{ value.id }} | {{ value.name }}</option>
                               {% endif %}
                           {% endfor %}
                         </select>
@@ -306,6 +306,9 @@
                   </div>
 
 
+                {% for message  in messages  %}
+                        <p class="alert alert-danger">{{ message  }}</p>
+                {% endfor %}
                   <div class="float-left">
                       <a class="btn btn-primary btn-lg" href="/home">Cancel</a>
                   </div>

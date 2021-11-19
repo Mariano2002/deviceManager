@@ -20,7 +20,7 @@
 
             {% for field, errors in form.errors.items %}
                 {% for error in errors %}
-                    <p>{{ error }}</p>
+                    <p class="alert alert-danger">{{ error }}</p>
                 {% endfor %}
             {% endfor %}
             <p>{{form.errors.values.0.error}}</p>
