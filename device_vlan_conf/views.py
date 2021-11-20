@@ -23,14 +23,14 @@ def import_json(file, username):
     for i in dict:
         inst = i['fields']
         inst['username'] = username
-        print(inst)
+        # print(inst)
         try:
             if validate_davice(inst) == False:
-                print(111)
+                # print(111)
                 return False
             device.objects.create(**inst)
         except:
-            print(222)
+            # print(222)
             return False
 
     dict = json.loads(file.split("\n")[1])
@@ -39,7 +39,7 @@ def import_json(file, username):
         inst = i['fields']
         inst['username'] = username
         if validate_vlan(inst) == False or inst['LANn_NAME'] =='':
-            print(3333)
+            # print(3333)
             return False
         VLAN.objects.create(**inst)
     return True
@@ -56,7 +56,7 @@ def import_csv(df_in, username):
     list_headers_b = []
     while len(headers_new) != 0:
         headers_now = headers_new[:15]
-        print(headers_now)
+        # print(headers_now)
         headers_new = headers_new[15:]
         list_headers_b.append(headers_now)
 
@@ -75,19 +75,19 @@ def import_csv(df_in, username):
             id_ja += 1
 
         inst['DEVICE_ID'] = id_ja
-        print(inst)
+        # print(inst)
         vlan_ids = []
         for hd in list_headers_b:
             for index1, row in df_in[hd].iterrows():
                 vlan_inst = {}
                 if index1 == index:
                     for i in hd:
-                        print(row[i])
+                        # print(row[i])
                         if str(row[i]) == "nan":
                             vlan_inst[re.sub('\d', 'n', i.split("_")[0]).replace("nn","n")+"_"+"_".join(i.split("_")[1:])] = ""
                         else:
                             vlan_inst[re.sub('\d', 'n', i.split("_")[0]).replace("nn","n")+"_"+"_".join(i.split("_")[1:])] = row[i]
-                print(len(vlan_inst))
+                # print(len(vlan_inst))
                 if len(vlan_inst) != 15:
                     continue
                 idv_ja = 1
@@ -96,7 +96,7 @@ def import_csv(df_in, username):
                     idv_ja += 1
                 vlan_inst['username'] = username
                 vlan_inst['LANn_VLAN_ID'] = idv_ja
-                print(vlan_inst)
+                # print(vlan_inst)
                 if validate_vlan(vlan_inst) != False and vlan_inst['LANn_NAME'] !='':
                     vlan_ids.append(idv_ja)
                     VLAN.objects.create(**vlan_inst)
@@ -111,7 +111,7 @@ def display(request):
         file = request.FILES['file'].read().decode('utf-8')
         TESTDATA = StringIO(file)
         df_in = pd.read_csv(TESTDATA, sep=',')
-        print(df_in)
+        # print(df_in)
 
         # cereal_df = pd.read_csv(request.FILES['file'])
         # print(cereal_df)
@@ -138,7 +138,7 @@ def display(request):
             except:
                 pass
             item.VLANS_names = ", ".join(VLANS_names)
-        print(items)
+        # print(items)
         vlans = VLAN.objects.all().filter(username=request.user.username)
         return render(request, 'display.html', {'devices':items, 'vlans':vlans, 'form':form})
 
@@ -150,7 +150,7 @@ def login_page(request):
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
-        print(user)
+        # print(user)
         if user is not None:
             login(request, user)
             return redirect(display)
@@ -158,7 +158,7 @@ def login_page(request):
             messages.error(request, 'Username or password in incorrect')
             return render(request, 'login.html', {})
     else:
-        print(request.user)
+        # print(request.user)
         if request.user.is_anonymous:
             return render(request, 'login.html',)
         return redirect(display)
@@ -185,52 +185,52 @@ def logout_page(request):
 def validate_davice(device):
     r = re.compile('.{4}-.{4}-.{4}$|.{4}.{4}.{4}$')
     if r.match(device['SN']) is None and device['SN'] != "":
-        print(1)
+        # print(1)
         return False
 
     r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/[0-9]{1,2}$')
     if r.match(device['LAN_NETWORK_LIST']) is None and device['LAN_NETWORK_LIST'] != "":
-        print(2)
+        # print(2)
         return False
 
     r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/[0-9]{1,2}:[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
     if r.match(device['LAN_STROUTEn']) is None and device['LAN_STROUTEn'] != "":
-        print(3)
+        # print(3)
         return False
 
     r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
     if r.match(device['DHCP_SERVER_POOL_START']) is None and device['DHCP_SERVER_POOL_START'] != "":
-        print(4)
+        # print(4)
         return False
     r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
     if r.match(device['DHCP_SERVER_NETMASK']) is None and device['DHCP_SERVER_NETMASK'] != "":
-        print(5)
+        # print(5)
         return False
     r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
     if r.match(device['DHCP_SERVER_POOL_END']) is None and device['DHCP_SERVER_POOL_END'] != "":
-        print(6)
+        # print(6)
         return False
 
 
     r = re.compile('[A-Z]{2}:[A-Z]{2}:[A-Z]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}#[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}#')
     if r.match(device['DHCP_RESERVATION']) is None and device['DHCP_RESERVATION'] != "":
-        print(7)
+        # print(7)
         return False
 
 
     r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3} [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
     if r.match(device['DHCP_SERVER_DNS']) is None and device['DHCP_SERVER_DNS'] != "":
-        print(8)
+        # print(8)
         return False
     r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3} [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
     if r.match(device['DHCP_RELAY_SERVER']) is None and device['DHCP_RELAY_SERVER'] != "":
-        print(9)
+        # print(9)
         return False
 
 
     r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3} [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3},')
     if r.match(device['DHCP_SERVER_WINS']) is None and device['DHCP_SERVER_WINS'] != "":
-        print(10)
+        # print(10)
         return False
 
 
@@ -238,49 +238,49 @@ def validate_davice(device):
 def validate_vlan(vlan):
     try:
         if int(vlan['LANn_VLAN_ID']) > 4094:
-            print(1111)
+            # print(1111)
             return False
     except:
         pass
 
     r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/[0-9]{1,2}$')
     if r.match(vlan['LANn_NETWORK_LIST'].replace('{ID}','0')) is None and vlan['LANn_NETWORK_LIST'] != "":
-        print(2222)
+        # print(2222)
         return False
 
     r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
     if r.match(vlan['DHCPn_SERVER_NETMASK'].replace('{ID}','0')) is None and vlan['DHCPn_SERVER_NETMASK'] != "":
-        print(3)
+        # print(3)
         return False
 
     r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
     if r.match(vlan['DHCPn_SERVER_POOL_START'].replace('{ID}','0')) is None and vlan['DHCPn_SERVER_POOL_START'] != "":
-        print(4)
+        # print(4)
         return False
 
     r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
     if r.match(vlan['DHCPn_SERVER_POOL_END'].replace('{ID}','0')) is None and vlan['DHCPn_SERVER_POOL_END'] != "":
-        print(5)
+        # print(5)
         return False
 
     r = re.compile('[A-Z]{2}:[A-Z]{2}:[A-Z]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}#[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}#')
     if r.match(vlan['DHCPn_RESERVATION'].replace('{ID}','0')) is None and vlan['DHCPn_RESERVATION'] != "":
-        print(6)
+        # print(6)
         return False
 
     r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3} [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
     if r.match(vlan['DHCPn_SERVER_DNS'].replace('{ID}','0')) is None and vlan['DHCPn_SERVER_DNS'] != "":
-        print(7)
+        # print(7)
         return False
 
     r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3} [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3},')
     if r.match(vlan['DHCPn_SERVER_WINS'].replace('{ID}','0')) is None and vlan['DHCPn_SERVER_WINS'] != "":
-        print(8)
+        # print(8)
         return False
 
     r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3} [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
     if r.match(vlan['DHCPn_RELAY_SERVER'].replace('{ID}','0')) is None and vlan['DHCPn_RELAY_SERVER'] != "":
-        print(9)
+        # print(9)
         return False
 
 
@@ -303,7 +303,7 @@ def add_device(request):
         form = deviceForm(data=updated_data)
 
         if form.is_valid():
-            print(form.errors)
+            # print(form.errors)
             form.save()
             return redirect(display)
         else:
@@ -332,7 +332,7 @@ def add_vlan(request):
             return redirect(display)
         else:
 
-            print(form.errors)
+            # print(form.errors)
             messages.error(request, 'One of the field\'s format is wrong or you are using a duplicated ID!')
             return redirect(add_vlan)
     else:
@@ -345,7 +345,7 @@ def add_vlan(request):
 def edit_device(request, device_id):
     if (request.method) == "POST":
         ids = request.POST.getlist("VLANS")
-        print(ids)
+        # print(ids)
         ids.remove("")
 
         updated_data = request.POST.copy()
@@ -358,7 +358,7 @@ def edit_device(request, device_id):
             form.save()
             return redirect(display)
         else:
-            print("false")
+            # print("false")
             messages.error(request, 'One of the field\'s format is wrong or you are using a duplicated ID!')
             return redirect(reverse('edit_device', kwargs={'device_id':device_id}))
 
@@ -399,7 +399,7 @@ def duplicate_device(request, device_id):
 
 @login_required(login_url="/login")
 def delete_device(request, device_id):
-    print(device_id)
+    # print(device_id)
     device.objects.all().filter(id=device_id, username=request.user.username)[0].delete()
     return redirect(display)
 
@@ -421,7 +421,7 @@ def edit_vlan(request, vlan_id):
         form = VLANForm(data=updated_data, instance=vlan_i)
 
         if form.is_valid():
-            print(form.errors)
+            # print(form.errors)
             form.save()
             return redirect(display)
         else:
@@ -448,7 +448,7 @@ def duplicate_vlan(request, vlan_id):
 
 @login_required(login_url="/login")
 def delete_vlan(request, vlan_id):
-    print(vlan_id)
+    # print(vlan_id)
     VLAN.objects.all().filter(id=vlan_id, username=request.user.username)[0].delete()
     return redirect(display)
 
@@ -461,7 +461,7 @@ def clear_vlans(request):
 @csrf_exempt
 def export_csv(request):
     if request.method == "POST":
-        print("here")
+        # print("here")
         ids = json.loads(request.POST.get("ids"))
         devices = device.objects.all().filter(id__in=ids, username=request.user.username)
         response = HttpResponse(
