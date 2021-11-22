@@ -130,7 +130,7 @@
     <div class="card">
       <div class="card-body">
               <span class="table-add float-left mb-3 mr-2">
-                  <form method="post" enctype="multipart/form-data">
+                  <form method="post" id="form" enctype="multipart/form-data">
                     {% csrf_token %}
                         <input type="file" id="file" name="file">
                         <input type="submit" class="btn btn-success" value="Import">
@@ -218,6 +218,9 @@
         }
 
 
+        $('#form').one('submit', function() {
+            $(this).find('input[type="submit"]').attr('disabled','disabled');
+        });
 
         $('#sortTable').DataTable();
         $('#sortTable2').DataTable();

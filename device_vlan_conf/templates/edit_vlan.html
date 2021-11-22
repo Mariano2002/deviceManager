@@ -22,7 +22,7 @@
             <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
               <div class="card-body p-4 p-md-5">
                 <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Edit / View VLAN</h3>
-                <form method="POST" novalidate>
+                <form method="POST" id="form" novalidate>
                     {% csrf_token %}
 
                   <div class="row">
@@ -281,6 +281,9 @@
             $('[data-toggle="tooltip"]').tooltip();
         });
 
+        $('#form').one('submit', function() {
+            $(this).find('input[type="submit"]').attr('disabled','disabled');
+        });
 
     </script>
     <style>

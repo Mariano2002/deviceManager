@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <title>Login Page</title>
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+    </script>
 </head>
 <body>
 
@@ -15,7 +17,7 @@
         <h2 class="active"> Sign Up </h2>
 
         <!-- Login Form -->
-        <form action="" method="post">
+        <form action="" id="form" method="post">
             {% csrf_token %}
 
             {% for field, errors in form.errors.items %}
@@ -34,7 +36,12 @@
 
       </div>
     </div>
-
+    <script>
+        $('#form').one('submit', function() {
+            $(this).find('input[type="submit"]').attr('disabled','disabled');
+            console.log("locked")
+        });
+    </script>
 
 </body>
 </html>
