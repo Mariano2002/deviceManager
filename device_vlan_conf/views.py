@@ -115,14 +115,18 @@ def display(request):
 
         # cereal_df = pd.read_csv(request.FILES['file'])
         # print(cereal_df)
-        if request.FILES['file'].name[-5:] == '.json':
-            if import_json(file, request.user.username) == False:
-                messages.error(request, 'Device ID or VLAN ID already exists!')
+        try:
+            if request.FILES['file'].name[-5:] == '.json':
+                if import_json(file, request.user.username) == False:
+                    messages.error(request, 'Device ID or VLAN ID already exists!')
 
-        elif request.FILES['file'].name[-4:] == '.csv':
-            import_csv(df_in, request.user.username)
-        else:
+            elif request.FILES['file'].name[-4:] == '.csv':
+                import_csv(df_in, request.user.username)
+            else:
+                messages.error(request, 'Please upload a CSV or JSON file!')
+        except:
             messages.error(request, 'Please upload a CSV or JSON file!')
+            
         return redirect(display)
 
     else:
