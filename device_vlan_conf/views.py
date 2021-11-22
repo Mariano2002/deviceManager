@@ -108,14 +108,10 @@ def import_csv(df_in, username):
 def display(request):
 
     if request.method == 'POST':
-        file = request.FILES['file'].read().decode('utf-8')
-        TESTDATA = StringIO(file)
-        df_in = pd.read_csv(TESTDATA, sep=',')
-        # print(df_in)
-
-        # cereal_df = pd.read_csv(request.FILES['file'])
-        # print(cereal_df)
         try:
+            file = request.FILES['file'].read().decode('utf-8')
+            TESTDATA = StringIO(file)
+            df_in = pd.read_csv(TESTDATA, sep=',')
             if request.FILES['file'].name[-5:] == '.json':
                 if import_json(file, request.user.username) == False:
                     messages.error(request, 'Device ID or VLAN ID already exists!')
@@ -126,7 +122,7 @@ def display(request):
                 messages.error(request, 'Please upload a CSV or JSON file!')
         except:
             messages.error(request, 'Please upload a CSV or JSON file!')
-            
+
         return redirect(display)
 
     else:
