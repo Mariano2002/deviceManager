@@ -21,8 +21,8 @@
           <div class="col-12 col-lg-12 col-xl-12">
             <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
               <div class="card-body p-4 p-md-5">
-                <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Add a device</h3>
-                <form method="POST" id="form" novalidate>
+                <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Add a VLAN</h3>
+                <form method="POST" id="form" class="needs-validation" novalidate>
                     {% csrf_token %}
 
                   <div class="row">
@@ -32,6 +32,9 @@
                         {{ form.LANn_VLAN_ID.as_hidden }}
                         <input type="number" name="LANn_VLAN_ID" id="LANn_VLAN_ID" class="form-control form-control-lg" placeholder="{{ form.LANn_VLAN_ID.help_text }}" />
                         <label data-toggle="tooltip" data-placement="top" title="ID of the VLAN" class="form-label" for="LANn_VLAN_ID">LANn_VLAN_ID</label>
+                        <div class="invalid-feedback">
+                          This field is required!
+                        </div>
                       </div>
                     </div>
 
@@ -41,6 +44,9 @@
                         {{ form.LANn_NAME.as_hidden }}
                         <input type="text" name="LANn_NAME" id="LANn_NAME" class="form-control form-control-lg" placeholder="{{ form.LANn_NAME.help_text }}" />
                         <label data-toggle="tooltip" data-placement="top" title="Name of the VLAN" class="form-label" for="LANn_NAME">LANn_NAME</label>
+                        <div class="invalid-feedback">
+                          This field is required!
+                        </div>
                       </div>
                     </div>
 
@@ -238,6 +244,25 @@
 
     <script>
         $(document).ready(function() {
+              var forms = document.querySelectorAll('.needs-validation')
+
+              Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                  form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                      event.preventDefault()
+                      event.stopPropagation()
+                    }
+
+                    form.classList.add('was-validated')
+                  }, false)
+                })
+
+
+
+        });
+
+        $(document).ready(function() {
             $('.js-example-basic-multiple').select2();
         });
 
@@ -250,6 +275,16 @@
         });
     </script>
     <style>
+
+        .form-control::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+            color: darkgray;
+            opacity: .7; /* Firefox */
+        }
+
+        .form-control::-ms-value { /* Chrome, Firefox, Opera, Safari 10.1+ */
+            color: black;
+            opacity: 1; /* Firefox */
+        }
         .gradient-custom {
           /* fallback for old browsers */
           background: #56baed;
