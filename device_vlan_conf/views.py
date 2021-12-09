@@ -17,32 +17,32 @@ import re
 import pandas as pd
 
 from io import StringIO
-def import_json(file, username):
-    dict = json.loads(file.split("\n")[0])
-
-    for i in dict:
-        inst = i['fields']
-        inst['username'] = username
-        # print(inst)
-        try:
-            if validate_davice(inst) == False:
-                # print(111)
-                return False
-            device.objects.create(**inst)
-        except:
-            # print(222)
-            return False
-
-    dict = json.loads(file.split("\n")[1])
-
-    for i in dict:
-        inst = i['fields']
-        inst['username'] = username
-        if validate_vlan(inst) == False or inst['LANn_NAME'] =='':
-            # print(3333)
-            return False
-        VLAN.objects.create(**inst)
-    return True
+# def import_json(file, username):
+#     dict = json.loads(file.split("\n")[0])
+# 
+#     for i in dict:
+#         inst = i['fields']
+#         inst['username'] = username
+#         # print(inst)
+#         try:
+#             if validate_davice(inst) == False:
+#                 # print(111)
+#                 return False
+#             device.objects.create(**inst)
+#         except:
+#             # print(222)
+#             return False
+# 
+#     dict = json.loads(file.split("\n")[1])
+# 
+#     for i in dict:
+#         inst = i['fields']
+#         inst['username'] = username
+#         if validate_vlan(inst) == False or inst['LANn_NAME'] =='':
+#             # print(3333)
+#             return False
+#         VLAN.objects.create(**inst)
+#     return True
 
 def import_csv(df_in, username):
     list_headers = ['SN', 'LAN_NETWORK_LIST', 'LAN_MEDIA', 'LAN_L2_ISO', 'LAN_STROUTEn', 'DHCP_SERVER', 'DHCP_SERVER_LEASE',
@@ -56,7 +56,7 @@ def import_csv(df_in, username):
     list_headers_b = []
     while len(headers_new) != 0:
         headers_now = headers_new[:15]
-        # print(headers_now)
+#         # print(headers_now)
         headers_new = headers_new[15:]
         list_headers_b.append(headers_now)
 
@@ -183,107 +183,127 @@ def logout_page(request):
 
 
 def validate_davice(device):
+    try:
+        if int(device['DEVICE_ID']) == 0:
+            # print(1111)
+            return "Please check the DEVICE_ID field!"
+    except:
+        if device['DEVICE_ID'] == "":
+            return "DEVICE_ID is required!"
+        else:
+            return "Please check the DEVICE_ID field!"
+
+
     r = re.compile('.{4}-.{4}-.{4}$|.{4}.{4}.{4}$')
     if r.match(device['SN']) is None and device['SN'] != "":
         # print(1)
-        return False
+        return "Please check the SN field!"
 
     r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/[0-9]{1,2}$')
     if r.match(device['LAN_NETWORK_LIST']) is None and device['LAN_NETWORK_LIST'] != "":
         # print(2)
-        return False
+        return "Please check the LAN_NETWORK_LIST field!"
 
     r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/[0-9]{1,2}:[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
     if r.match(device['LAN_STROUTEn']) is None and device['LAN_STROUTEn'] != "":
         # print(3)
-        return False
+        return "Please check the LAN_STROUTEn field!"
 
     r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
     if r.match(device['DHCP_SERVER_POOL_START']) is None and device['DHCP_SERVER_POOL_START'] != "":
         # print(4)
-        return False
+        return "Please check the DHCP_SERVER_POOL_START field!"
+
     r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
     if r.match(device['DHCP_SERVER_NETMASK']) is None and device['DHCP_SERVER_NETMASK'] != "":
         # print(5)
-        return False
+        return "Please check the DHCP_SERVER_NETMASK field!"
+
     r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
     if r.match(device['DHCP_SERVER_POOL_END']) is None and device['DHCP_SERVER_POOL_END'] != "":
         # print(6)
-        return False
+        return "Please check the DHCP_SERVER_POOL_END field!"
 
 
     r = re.compile('[A-Z]{2}:[A-Z]{2}:[A-Z]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}#[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}#')
     if r.match(device['DHCP_RESERVATION']) is None and device['DHCP_RESERVATION'] != "":
         # print(7)
-        return False
+        return "Please check the DHCP_RESERVATION field!"
 
 
     r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3} [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
     if r.match(device['DHCP_SERVER_DNS']) is None and device['DHCP_SERVER_DNS'] != "":
         # print(8)
-        return False
+        return "Please check the DHCP_SERVER_DNS field!"
+
     r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3} [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
     if r.match(device['DHCP_RELAY_SERVER']) is None and device['DHCP_RELAY_SERVER'] != "":
         # print(9)
-        return False
+        return "Please check the DHCP_RELAY_SERVER field!"
 
 
     r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3} [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3},')
     if r.match(device['DHCP_SERVER_WINS']) is None and device['DHCP_SERVER_WINS'] != "":
         # print(10)
-        return False
+        return "Please check the DHCP_SERVER_POOL_END field!"
 
-
+    return True
 
 def validate_vlan(vlan):
     try:
         if int(vlan['LANn_VLAN_ID']) > 4094:
             # print(1111)
-            return False
+            return "Please check the LANn_VLAN_ID field!"
     except:
-        pass
+        if vlan['LANn_VLAN_ID'] == "":
+            return "LANn_VLAN_ID is required!"
+        else:
+            return "Please check the LANn_VLAN_ID field!"
+
+    if vlan['LANn_NAME'] == "":
+            return "Please check the LANn_VLAN_ID field!"
 
     r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/[0-9]{1,2}$')
     if r.match(vlan['LANn_NETWORK_LIST'].replace('{ID}','0')) is None and vlan['LANn_NETWORK_LIST'] != "":
         # print(2222)
-        return False
+        return "Please check the LANn_NETWORK_LIST field!"
 
     r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
     if r.match(vlan['DHCPn_SERVER_NETMASK'].replace('{ID}','0')) is None and vlan['DHCPn_SERVER_NETMASK'] != "":
         # print(3)
-        return False
+        return "Please check the DHCPn_SERVER_NETMASK field!"
 
     r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
     if r.match(vlan['DHCPn_SERVER_POOL_START'].replace('{ID}','0')) is None and vlan['DHCPn_SERVER_POOL_START'] != "":
         # print(4)
-        return False
+        return "Please check the DHCPn_SERVER_POOL_START field!"
 
     r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
     if r.match(vlan['DHCPn_SERVER_POOL_END'].replace('{ID}','0')) is None and vlan['DHCPn_SERVER_POOL_END'] != "":
         # print(5)
-        return False
+        return "Please check the DHCPn_SERVER_POOL_END field!"
 
     r = re.compile('[A-Z]{2}:[A-Z]{2}:[A-Z]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}#[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}#')
     if r.match(vlan['DHCPn_RESERVATION'].replace('{ID}','0')) is None and vlan['DHCPn_RESERVATION'] != "":
         # print(6)
-        return False
+        return "Please check the DHCPn_RESERVATION field!"
 
     r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3} [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
     if r.match(vlan['DHCPn_SERVER_DNS'].replace('{ID}','0')) is None and vlan['DHCPn_SERVER_DNS'] != "":
         # print(7)
-        return False
+        return "Please check the DHCPn_SERVER_DNS field!"
 
     r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3} [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3},')
     if r.match(vlan['DHCPn_SERVER_WINS'].replace('{ID}','0')) is None and vlan['DHCPn_SERVER_WINS'] != "":
         # print(8)
-        return False
+        return "Please check the DHCPn_SERVER_WINS field!"
 
     r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3} [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
     if r.match(vlan['DHCPn_RELAY_SERVER'].replace('{ID}','0')) is None and vlan['DHCPn_RELAY_SERVER'] != "":
         # print(9)
-        return False
+        return "Please check the DHCPn_RELAY_SERVER field!"
 
-
+    return True
 
 
 
@@ -297,8 +317,8 @@ def add_device(request):
         updated_data = request.POST.copy()
         updated_data.update({'VLANS': json.dumps(ids)})
         updated_data.update({'username': request.user.username})
-        if validate_davice(updated_data) == False:
-            messages.error(request, 'One of the field\'s format is wrong!')
+        if validate_davice(updated_data) != True:
+            messages.error(request, validate_davice(updated_data))
             return redirect(add_device)
         form = deviceForm(data=updated_data)
 
@@ -307,7 +327,8 @@ def add_device(request):
             form.save()
             return redirect(display)
         else:
-            messages.error(request, 'One of the field\'s format is wrong or you are using a duplicated ID!')
+            if "Device with this DEVICE ID already exists." in str(form.errors):
+                messages.error(request, 'Please use a unique ID!')
             return redirect(add_device)
 
     else:
@@ -323,17 +344,22 @@ def add_vlan(request):
     if(request.method) == "POST":
         updated_data = request.POST.copy()
         updated_data.update({'username': request.user.username})
-        if validate_vlan(updated_data) == False:
-            messages.error(request, 'One of the field\'s format is wrong!')
+        if validate_vlan(updated_data) != True:
+            messages.error(request, validate_vlan(updated_data))
             return redirect(add_vlan)
         form = VLANForm(data=updated_data)
         if form.is_valid():
             form.save()
             return redirect(display)
         else:
-
             # print(form.errors)
-            messages.error(request, 'One of the field\'s format is wrong or you are using a duplicated ID!')
+            if "Vlan with this LANn VLAN ID already exists." in str(form.errors):
+                messages.error(request, 'Please use a unique ID!')
+            else:
+                for i in form.errors:
+                    messages.error(request, i)
+                    break
+
             return redirect(add_vlan)
     else:
         form = VLANForm
@@ -351,6 +377,10 @@ def edit_device(request, device_id):
         updated_data = request.POST.copy()
         updated_data.update({'VLANS': json.dumps(ids)})
         updated_data.update({'username': request.user.username})
+        if validate_davice(updated_data) != True:
+            messages.error(request, validate_davice(updated_data))
+            return redirect('edit_device', device_id=device_id)
+
         device_i = device.objects.all().filter(id=device_id, username=request.user.username)[0]
         form = deviceForm(data=updated_data, instance=device_i)
 
@@ -359,7 +389,8 @@ def edit_device(request, device_id):
             return redirect(display)
         else:
             # print("false")
-            messages.error(request, 'One of the field\'s format is wrong or you are using a duplicated ID!')
+            if "Device with this DEVICE ID already exists." in str(form.errors):
+                messages.error(request, 'Please use a unique ID!')
             return redirect(reverse('edit_device', kwargs={'device_id':device_id}))
 
     else:
@@ -418,6 +449,9 @@ def edit_vlan(request, vlan_id):
 
         updated_data = request.POST.copy()
         updated_data.update({'username': request.user.username})
+        if validate_vlan(updated_data) != True:
+            messages.error(request, validate_vlan(updated_data))
+            return redirect('edit_vlan', vlan_id=vlan_id)
         form = VLANForm(data=updated_data, instance=vlan_i)
 
         if form.is_valid():
@@ -425,7 +459,8 @@ def edit_vlan(request, vlan_id):
             form.save()
             return redirect(display)
         else:
-            messages.error(request, 'One of the field\'s format is wrong or you are using a duplicated ID!')
+            if "Vlan with this LANn VLAN ID already exists." in str(form.errors):
+                messages.error(request, 'Please use a unique ID!')
             return redirect(reverse('edit_vlan', kwargs={'vlan_id':vlan_id}))
 
     else:
