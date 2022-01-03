@@ -19,7 +19,7 @@ import pandas as pd
 from io import StringIO
 # def import_json(file, username):
 #     dict = json.loads(file.split("\n")[0])
-# 
+#
 #     for i in dict:
 #         inst = i['fields']
 #         inst['username'] = username
@@ -32,9 +32,9 @@ from io import StringIO
 #         except:
 #             # print(222)
 #             return False
-# 
+#
 #     dict = json.loads(file.split("\n")[1])
-# 
+#
 #     for i in dict:
 #         inst = i['fields']
 #         inst['username'] = username
@@ -234,7 +234,9 @@ def validate_davice(device):
     r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3} [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
     if r.match(device['DHCP_SERVER_DNS']) is None and device['DHCP_SERVER_DNS'] != "":
         # print(8)
-        return "Please check the DHCP_SERVER_DNS field!"
+        r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
+        if r.match(device['DHCP_SERVER_DNS']) is None and device['DHCP_SERVER_DNS'] != "":
+            return "Please check the DHCP_SERVER_DNS field!"
 
     r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3} [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
     if r.match(device['DHCP_RELAY_SERVER']) is None and device['DHCP_RELAY_SERVER'] != "":
@@ -291,7 +293,9 @@ def validate_vlan(vlan):
     r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3} [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
     if r.match(vlan['DHCPn_SERVER_DNS'].replace('{ID}','0')) is None and vlan['DHCPn_SERVER_DNS'] != "":
         # print(7)
-        return "Please check the DHCPn_SERVER_DNS field!"
+        r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
+        if r.match(vlan['DHCPn_SERVER_DNS'].replace('{ID}','0')) is None and vlan['DHCPn_SERVER_DNS'] != "":
+            return "Please check the DHCPn_SERVER_DNS field!"
 
     r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3} [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3},')
     if r.match(vlan['DHCPn_SERVER_WINS'].replace('{ID}','0')) is None and vlan['DHCPn_SERVER_WINS'] != "":
