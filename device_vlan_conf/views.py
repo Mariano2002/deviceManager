@@ -45,7 +45,7 @@ from io import StringIO
 #     return True
 
 def import_csv(df_in, username):
-    list_headers = ['SN', 'LAN_NETWORK_LIST', 'LAN_MEDIA', 'LAN_L2_ISO', 'LAN_STROUTEn', 'DHCP_SERVER', 'DHCP_SERVER_LEASE',
+    list_headers = ['SN', 'LAN_NETWORK_LIST', 'LAN_MEDIA', 'LAN_L2_ISO', 'LAN_STROUTE1', 'DHCP_SERVER', 'DHCP_SERVER_LEASE',
                'DHCP_SERVER_NETMASK', 'DHCP_SERVER_POOL_START', 'DHCP_SERVER_POOL_END', 'DHCP_RESERVATION',
                'DHCP_LOG_ENABLE', 'DHCP_SERVER_DNS', 'DHCP_SERVER_WINS', 'DHCP_OPTION_15', 'DHCP_RELAY_OPTION_82',
                'DHCP_RELAY_SERVER']
@@ -99,10 +99,22 @@ def import_csv(df_in, username):
                 # print(vlan_inst)
                 if validate_vlan(vlan_inst) != False and vlan_inst['LANn_NAME'] !='':
                     vlan_ids.append(idv_ja)
-                    VLAN.objects.create(**vlan_inst)
+
+                    try:
+                        VLAN.objects.create(**vlan_inst)
+                    except Exception as e:
+                        print(e)
 
         inst['VLANS'] = json.dumps(vlan_ids)
-        device.objects.create(**inst)
+        try:
+            inst['LAN_STROUTEn'] = inst['LAN_STROUTE1']
+            inst.pop('LAN_STROUTE1', None)
+        except:
+            pass
+        try:
+            device.objects.create(**inst)
+        except Exception as e:
+            print(e)
 
 @login_required(login_url="/login")
 def display(request):
@@ -205,9 +217,9 @@ def validate_davice(device):
         return "Please check the LAN_NETWORK_LIST field!"
 
     r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/[0-9]{1,2}:[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
-    if r.match(device['LAN_STROUTEn']) is None and device['LAN_STROUTEn'] != "":
+    if r.match(device['LAN_STROUTE1']) is None and device['LAN_STROUTE1'] != "":
         # print(3)
-        return "Please check the LAN_STROUTEn field!"
+        return "Please check the LAN_STROUTE1 field!"
 
     r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
     if r.match(device['DHCP_SERVER_POOL_START']) is None and device['DHCP_SERVER_POOL_START'] != "":
@@ -264,48 +276,71 @@ def validate_vlan(vlan):
 
     if vlan['LANn_NAME'] == "":
             return "Please check the LANn_VLAN_ID field!"
+    try:
+        r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/[0-9]{1,2}$')
+        if r.match(vlan['LANn_NETWORK_LIST'].replace('{ID}','0')) is None and vlan['LANn_NETWORK_LIST'] != "":
+            # print(2222)
+            return "Please check the LANn_NETWORK_LIST field!"
+    except:
+        pass
+    try:
 
-    r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/[0-9]{1,2}$')
-    if r.match(vlan['LANn_NETWORK_LIST'].replace('{ID}','0')) is None and vlan['LANn_NETWORK_LIST'] != "":
-        # print(2222)
-        return "Please check the LANn_NETWORK_LIST field!"
-
-    r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
-    if r.match(vlan['DHCPn_SERVER_NETMASK'].replace('{ID}','0')) is None and vlan['DHCPn_SERVER_NETMASK'] != "":
-        # print(3)
-        return "Please check the DHCPn_SERVER_NETMASK field!"
-
-    r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
-    if r.match(vlan['DHCPn_SERVER_POOL_START'].replace('{ID}','0')) is None and vlan['DHCPn_SERVER_POOL_START'] != "":
-        # print(4)
-        return "Please check the DHCPn_SERVER_POOL_START field!"
-
-    r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
-    if r.match(vlan['DHCPn_SERVER_POOL_END'].replace('{ID}','0')) is None and vlan['DHCPn_SERVER_POOL_END'] != "":
-        # print(5)
-        return "Please check the DHCPn_SERVER_POOL_END field!"
-
-    r = re.compile('[A-Z]{2}:[A-Z]{2}:[A-Z]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}#[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}#')
-    if r.match(vlan['DHCPn_RESERVATION'].replace('{ID}','0')) is None and vlan['DHCPn_RESERVATION'] != "":
-        # print(6)
-        return "Please check the DHCPn_RESERVATION field!"
-
-    r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3} [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
-    if r.match(vlan['DHCPn_SERVER_DNS'].replace('{ID}','0')) is None and vlan['DHCPn_SERVER_DNS'] != "":
-        # print(7)
         r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
+        if r.match(vlan['DHCPn_SERVER_NETMASK'].replace('{ID}','0')) is None and vlan['DHCPn_SERVER_NETMASK'] != "":
+            # print(3)
+            return "Please check the DHCPn_SERVER_NETMASK field!"
+    except:
+        pass
+    try:
+
+        r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
+        if r.match(vlan['DHCPn_SERVER_POOL_START'].replace('{ID}','0')) is None and vlan['DHCPn_SERVER_POOL_START'] != "":
+            # print(4)
+            return "Please check the DHCPn_SERVER_POOL_START field!"
+    except:
+        pass
+    try:
+
+        r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
+        if r.match(vlan['DHCPn_SERVER_POOL_END'].replace('{ID}','0')) is None and vlan['DHCPn_SERVER_POOL_END'] != "":
+            # print(5)
+            return "Please check the DHCPn_SERVER_POOL_END field!"
+    except:
+        pass
+    try:
+
+        r = re.compile('[A-Z]{2}:[A-Z]{2}:[A-Z]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}#[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}#')
+        if r.match(vlan['DHCPn_RESERVATION'].replace('{ID}','0')) is None and vlan['DHCPn_RESERVATION'] != "":
+            # print(6)
+            return "Please check the DHCPn_RESERVATION field!"
+    except:
+        pass
+    try:
+
+        r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3} [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
         if r.match(vlan['DHCPn_SERVER_DNS'].replace('{ID}','0')) is None and vlan['DHCPn_SERVER_DNS'] != "":
-            return "Please check the DHCPn_SERVER_DNS field!"
+            # print(7)
+            r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
+            if r.match(vlan['DHCPn_SERVER_DNS'].replace('{ID}','0')) is None and vlan['DHCPn_SERVER_DNS'] != "":
+                return "Please check the DHCPn_SERVER_DNS field!"
+    except:
+        pass
+    try:
 
-    r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3} [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3},')
-    if r.match(vlan['DHCPn_SERVER_WINS'].replace('{ID}','0')) is None and vlan['DHCPn_SERVER_WINS'] != "":
-        # print(8)
-        return "Please check the DHCPn_SERVER_WINS field!"
+        r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3} [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3},')
+        if r.match(vlan['DHCPn_SERVER_WINS'].replace('{ID}','0')) is None and vlan['DHCPn_SERVER_WINS'] != "":
+            # print(8)
+            return "Please check the DHCPn_SERVER_WINS field!"
+    except:
+        pass
+    try:
 
-    r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3} [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
-    if r.match(vlan['DHCPn_RELAY_SERVER'].replace('{ID}','0')) is None and vlan['DHCPn_RELAY_SERVER'] != "":
-        # print(9)
-        return "Please check the DHCPn_RELAY_SERVER field!"
+        r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3} [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
+        if r.match(vlan['DHCPn_RELAY_SERVER'].replace('{ID}','0')) is None and vlan['DHCPn_RELAY_SERVER'] != "":
+            # print(9)
+            return "Please check the DHCPn_RELAY_SERVER field!"
+    except:
+        pass
 
     return True
 
@@ -507,7 +542,7 @@ def export_csv(request):
             content_type='text/csv',
             headers={'Content-Disposition': 'attachment; filename="export.csv"'},
         )
-        headers = ['SN', 'LAN_NETWORK_LIST', 'LAN_MEDIA', 'LAN_L2_ISO', 'LAN_STROUTEn', 'DHCP_SERVER', 'DHCP_SERVER_LEASE', 'DHCP_SERVER_NETMASK', 'DHCP_SERVER_POOL_START', 'DHCP_SERVER_POOL_END', 'DHCP_RESERVATION', 'DHCP_LOG_ENABLE', 'DHCP_SERVER_DNS', 'DHCP_SERVER_WINS', 'DHCP_OPTION_15', 'DHCP_RELAY_OPTION_82', 'DHCP_RELAY_SERVER']
+        headers = ['SN', 'LAN_NETWORK_LIST', 'LAN_MEDIA', 'LAN_L2_ISO', 'LAN_STROUTE1', 'DHCP_SERVER', 'DHCP_SERVER_LEASE', 'DHCP_SERVER_NETMASK', 'DHCP_SERVER_POOL_START', 'DHCP_SERVER_POOL_END', 'DHCP_RESERVATION', 'DHCP_LOG_ENABLE', 'DHCP_SERVER_DNS', 'DHCP_SERVER_WINS', 'DHCP_OPTION_15', 'DHCP_RELAY_OPTION_82', 'DHCP_RELAY_SERVER']
         bigger = 0
         for nr,i in enumerate(devices):
             if len(VLAN.objects.all().filter(LANn_VLAN_ID__in=json.loads(i.VLANS), username=request.user.username)) > bigger:
