@@ -217,7 +217,7 @@ def validate_davice(device):
         return "Please check the LAN_NETWORK_LIST field!"
 
     r = re.compile('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/[0-9]{1,2}:[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$')
-    if r.match(device['LAN_STROUTE1']) is None and device['LAN_STROUTE1'] != "":
+    if r.match(device['LAN_STROUTEn']) is None and device['LAN_STROUTEn'] != "":
         # print(3)
         return "Please check the LAN_STROUTE1 field!"
 
